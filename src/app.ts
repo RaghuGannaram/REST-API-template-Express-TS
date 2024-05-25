@@ -7,13 +7,14 @@ import morganMiddleware from "@src/middlewares/morgan.middleware";
 import customErrorHandler from "@src/middlewares/custom-error-handler.middleware";
 import defaultMiddleware from "@src/middlewares/default.middleware";
 import api_v1 from "@src/api/v1";
-import { getFrontendURL } from "@src/utils/env-info";
+import { getAPIGatewayURL } from "@src/utils/env-info";
+import logger from "./configs/logger.config";
 
 const app: express.Application = express();
 
-const frontendURL = getFrontendURL();
+const apiGatewayURL = getAPIGatewayURL();
 const corsOptions = {
-    origin: frontendURL,
+    origin: apiGatewayURL,
     credentials: true,
 };
 
@@ -25,6 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use("/health-check", (_req: Request, res: Response) => {
+    logger.info("Health check");
     res.status(200).json({ message: "OK" });
 });
 
